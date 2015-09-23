@@ -3,7 +3,7 @@
 /**
  *Class for Database connection
 **/
-class dbConnection {
+class dbConnect {
   private $conn;
 
   function __construct() {}
