@@ -7,7 +7,9 @@ require_once '../libs/Slim/Slim/Slim.php';
 
 $app = new \Slim\Slim();
 
-
+/**
+* Get service type end point
+**/
 $app->get('/type', function(){
   $res = array();
   $db = new dbHandler();
@@ -24,6 +26,9 @@ $app->get('/type', function(){
 
 });
 
+/**
+* Get district end point
+**/
 $app->get('/district', function(){
   $res = array();
   $db = new dbHandler();
@@ -40,6 +45,9 @@ $app->get('/district', function(){
 
 });
 
+/**
+* Get service list end point
+**/
 $app->get('/services', function(){
   $res = array();
   $db = new dbHandler();
@@ -55,19 +63,86 @@ $app->get('/services', function(){
     $tmp["service_info"] = $services["service_info"];
     array_push($res,$tmp);
   }
-
   response(200, $res);
-
 });
 
+/**
+* Get service list based on service type
+* @param $type
+**/
+$app->get('/servicestype/:type', function($type){
+  $res = array();
+  $db = new dbHandler();
+
+  $result = $db->getSpecificServices($type);
+
+  while($services = $result->fetch_assoc()) {
+    $tmp = array();
+    $tmp["service_name"] = $services["service_name"];
+    $tmp["service_address"] = $services["service_address"];
+    $tmp["service_telp"] = $services["service_telp"];
+    $tmp["service_email"] = $services["service_email"];
+    $tmp["service_info"] = $services["service_info"];
+    array_push($res,$tmp);
+  }
+  response(200, $res);
+});
+
+/**
+* Get service list based on district
+* @param $district
+**/
+$app->get('/districtservices/:district', function($district){
+  $res = array();
+  $db = new dbHandler();
+
+  $result = $db->getDistrictAllServices($district);
+
+  while($services = $result->fetch_assoc()) {
+    $tmp = array();
+    $tmp["service_name"] = $services["service_name"];
+    $tmp["service_address"] = $services["service_address"];
+    $tmp["service_telp"] = $services["service_telp"];
+    $tmp["service_email"] = $services["service_email"];
+    $tmp["service_info"] = $services["service_info"];
+    array_push($res,$tmp);
+  }
+  response(200, $res);
+});
+
+/**
+* Get service list based on district and type
+* @param $district $type
+**/
+$app->get('/districttypeservices/:district/:type', function($district,$type){
+  $res = array();
+  $db = new dbHandler();
+
+  $result = $db->getDistrictAllServices($district,$type);
+
+  while($services = $result->fetch_assoc()) {
+    $tmp = array();
+    $tmp["service_name"] = $services["service_name"];
+    $tmp["service_address"] = $services["service_address"];
+    $tmp["service_telp"] = $services["service_telp"];
+    $tmp["service_email"] = $services["service_email"];
+    $tmp["service_info"] = $services["service_info"];
+    array_push($res,$tmp);
+  }
+  response(200, $res);
+});
+
+/**
+* Print JSON result
+* @param $status_code $response
+*/
 function response($status_code, $response) {
     $app = \Slim\Slim::getInstance();
     // Http response code
     $app->status($status_code);
-
     // setting response content type to json
     $app->contentType('application/json');
-
+    // print as JSON
     echo json_encode($response);
 }
 
