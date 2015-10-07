@@ -120,10 +120,10 @@ class dbHandler {
     if(!$this->isTypeExists($typeName)) {
       $id = ''; // set empty, because id is autoincrement
 
-      $query = "INSERT INTO service_type(id_type, type_name) VALUES (?,?)"
+      $query = "INSERT INTO service_type(id_type, type_name) VALUES (?,?)";
 
       $stmt = $this->conn->prepare($query);
-      $stmt->bind_param('ss', $id,$typeName);
+      $stmt->bind_param("ss",$id,$typeName);
       $result = $stmt->execute();
       $stmt->close();
 
@@ -157,7 +157,7 @@ class dbHandler {
                 VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
 
       $stmt = $this->conn->prepare($query);
-      $stmt->bind_param('ssssssssssss',
+      $stmt->bind_param("ssssssssssss",
               $id,
               $serviceName,
               $serviceAddress,
@@ -197,13 +197,13 @@ class dbHandler {
   * @param $typeName
   **/
   public function isTypeExists($typeName) {
-    $query = "SELECT * FROM service_type WHERE type_name = ?";
+    $query = "SELECT type_name FROM service_type WHERE type_name = ?";
 
     $stmt = $this->conn->prepare($query);
-    $stmt->bind_param('s', $typeName);
+    $stmt->bind_param('s',$typeName);
     $stmt->execute();
     $stmt->store_result();
-    $rows = $stmt->rows;
+    $rows = $stmt->num_rows;
     $stmt->close();
     return $rows > 0;
   }
@@ -219,7 +219,7 @@ class dbHandler {
     $stmt->bind_param('s', $serviceName);
     $stmt->execute();
     $stmt->store_result();
-    $rows = $stmt->rows;
+    $rows = $stmt->num_rows;
     $stmt->close();
     return $rows > 0;
   }

@@ -8,6 +8,44 @@ require_once '../libs/Slim/Slim/Slim.php';
 $app = new \Slim\Slim();
 
 /**
+=========== POST METHOD ==============
+**/
+
+$app->post('/addtype', function() use($app){
+  $res = array();
+  $typeName = $app->request->post('typeName');
+  //$typeName = strtolower($typeName); // post everything in lowecase
+
+  $db = new dbHandler();
+  $result = $db->postNewServiceType($typeName);
+
+  if($result == SERVICE_TYPE_ADDED_SUCCESSFULLY) {
+		$res["error"] = false;
+		$res["message"] = "Service type successfully added";
+    $res["value"] = $typeName;
+    response(201, $res);
+	}
+	else if($result == SERVICE_TYPE_ADD_FAILED) {
+		$res["error"] = true;
+		$res["message"] = "Ooops ! Failed to add service type!";
+    $res["value"] = $typeName;
+    response(200, $res);
+	}
+	else if($result == SERVICE_TYPE_ALREADY_EXISTED) {
+		$res["error"] = true;
+		$res["message"] = "Service type already existed";
+    $res["value"] = $typeName;
+    response(200, $res);
+	}
+	//response(201, $res);
+});
+
+
+/**
+=========== GET METHOD REGION ===========
+**/
+
+/**
 * Get service type end point
 **/
 $app->get('/type', function(){
