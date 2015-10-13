@@ -5,16 +5,19 @@ require_once '../libs/Slim/Slim/Slim.php';
 
 \Slim\Slim::registerAutoloader();
 
-$app = new \Slim\Slim();
+$app = new Slim\Slim();
 
 /**
 =========== POST METHOD ==============
 **/
 
+/**
+* Add service type end point
+**/
 $app->post('/addtype', function() use($app){
   $res = array();
-  $typeName = $app->request->post('typeName');
-  //$typeName = strtolower($typeName); // post everything in lowecase
+  $typeName = $app->request()->post('typeName');
+  $typeName = strtolower($typeName); // post everything in lowecase
 
   $db = new dbHandler();
   $result = $db->postNewServiceType($typeName);
@@ -37,8 +40,85 @@ $app->post('/addtype', function() use($app){
     $res["value"] = $typeName;
     response(200, $res);
 	}
-	//response(201, $res);
 });
+
+/**
+* Add service district end point
+**/
+$app->post('/adddistrict', function() use($app){
+  $res = array();
+  $districtName = $app->request()->post('districtName');
+  $districtName = strtolower($districtName); // post everything in lowecase
+
+  $db = new dbHandler();
+  $result = $db->postNewServiceType($districtName);
+
+  if($result == SERVICE_DISTRICT_ADDED_SUCCESSFULLY) {
+		$res["error"] = false;
+		$res["message"] = "Service district successfully added";
+    $res["value"] = $districtName;
+    response(201, $res);
+	}
+	else if($result == SERVICE_DISTRICT_ADD_FAILED) {
+		$res["error"] = true;
+		$res["message"] = "Ooops ! Failed to add service district!";
+    $res["value"] = $districtName;
+    response(200, $res);
+	}
+	else if($result == SERVICE_DISTRICT_ALREADY_EXISTED) {
+		$res["error"] = true;
+		$res["message"] = "Service district already existed";
+    $res["value"] = $districtName;
+    response(200, $res);
+	}
+});
+
+$app->post('/addservice', function() use($app){
+  $res = array();
+  $serviceName = $app->request()->post('serviceName');
+  $serviceAddress = $app->request()->post('serviceAddress');
+  $serviceTelp = $app->request()->post('serviceTelp');
+  $serviceEmail = $app->request()->post('serviceEmail');
+  $serviceType = $app->request()->post('serviceType'); //post using type id
+  $serviceDistrict = $app->request()->post('serviceDistrict'); //post using district id
+  $serviceInfo = $app->request()->post('serviceInfo');
+  $serviceImageUrl = $app->request()->post('serviceImageUrl');
+  $serviceLocationName = $app->request()->post('serviceLocationName');
+  $serviceLocationLong = $app->request()->post('serviceLocationLong');
+  $serviceLocationLat = $app->request()->post('serviceLocationLat');
+
+  //Post all paramater to lowercase except type, district, long, lat
+  $serviceName = strtolower($serviceName);
+  $serviceAddress = strtolower($serviceAddress);
+  $serviceTelp = strtolower($serviceTelp);
+  $serviceEmail = strtolower($serviceEmail);
+  $serviceInfo = strtolower($serviceInfo);
+  $serviceImageUrl = strtolower($serviceImageUrl);
+  $serviceLocationName = strtolower($serviceLocationName);
+
+  $db = new dbHandler();
+  $result = $db->postNewServiceList($serviceName, $serviceAddress, $serviceTelp, $serviceEmail, $serviceType, $serviceDistrict,
+  $serviceInfo, $serviceImageUrl, $serviceLocationName, $serviceLocationLong, $serviceLocationLat);
+
+  if($result == SERVICE_ADDED_SUCCESSFULLY) {
+		$res["error"] = false;
+		$res["message"] = "Service district successfully added";
+    response(201, $res);
+	}
+	else if($result == SERVICE_ADD_FAILED) {
+		$res["error"] = true;
+		$res["message"] = "Ooops ! Failed to add service district!";
+    response(200, $res);
+	}
+	else if($result == SERVICE_ALREADY_EXISTED) {
+		$res["error"] = true;
+		$res["message"] = "Service district already existed";
+    response(200, $res);
+	}
+
+
+});
+
 
 
 /**

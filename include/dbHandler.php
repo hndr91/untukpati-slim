@@ -119,11 +119,10 @@ class dbHandler {
 
     if(!$this->isTypeExists($typeName)) {
       $id = ''; // set empty, because id is autoincrement
-
       $query = "INSERT INTO service_type(id_type, type_name) VALUES (?,?)";
 
       $stmt = $this->conn->prepare($query);
-      $stmt->bind_param("ss",$id,$typeName);
+      $stmt->bind_param('ss',$id,$typeName);
       $result = $stmt->execute();
       $stmt->close();
 
@@ -134,6 +133,30 @@ class dbHandler {
       }
     } else {
       return SERVICE_TYPE_ALREADY_EXISTED;
+    }
+
+    return $res;
+  }
+
+  public function postNewDistrict($districtName) {
+    $res = array();
+
+    if(!$this->isDistrictExists($districtName)) {
+      $id = '';
+      $query = "INSERT INTO service_districts(id_district, district_name) VALUES (?,?)";
+
+      $stmt = $this->conn->prepare($query);
+      $stmt->bind_param('ss', $id,$districtName);
+      $result = $stmt->execute();
+      $stmt->close();
+
+      if($result) {
+        return SERVICE_DISTRICT_ADDED_SUCCESSFULLY;
+      } else {
+        return SERVICE_DISTRICT_ADD_FAILED;
+      }
+    } else {
+      return SERVICE_DISTRICT_ALREADY_EXISTED;
     }
 
     return $res;
@@ -150,34 +173,22 @@ class dbHandler {
 
     if(!$this->isServiceExists($serviceName)) {
       $id = '';
-
       $query = "INSERT INTO service_list(id_service, service_name, service_address, service_telp, service_email,
-        service_type, service_district, service_info, service_image_url,
+        service_type, service_district, service_info, service_img_url,
         service_location_name, service_location_long, service_location_lat)
                 VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
 
       $stmt = $this->conn->prepare($query);
-      $stmt->bind_param("ssssssssssss",
-              $id,
-              $serviceName,
-              $serviceAddress,
-              $serviceTelp,
-              $serviceEmail,
-              $serviceType,
-              $serviceDistrict,
-              $serviceInfo,
-              $serviceImgUrl,
-              $serviceLocationName,
-              $serviceLocationLong,
-              $serviceLocationLat);
+      $stmt->bind_param('ssssssssssss',$id,$serviceName,$serviceAddress,$serviceTelp,$serviceEmail,$serviceType,$serviceDistrict,
+      $serviceInfo,$serviceImgUrl,$serviceLocationName,$serviceLocationLong,$serviceLocationLat);
 
       $result = $stmt->execute();
       $stmt->close();
 
       if($result) {
-        return SERVICE_TYPE_ADDED_SUCCESSFULLY;
+        return SERVICE_ADDED_SUCCESSFULLY;
       } else {
-        return SERVICE_TYPE_ADD_FAILED;
+        return SERVICE_ADD_FAILED;
       }
 
     } else {
@@ -203,9 +214,25 @@ class dbHandler {
     $stmt->bind_param('s',$typeName);
     $stmt->execute();
     $stmt->store_result();
-    $rows = $stmt->num_rows;
+    $num_rows = $stmt->num_rows;
     $stmt->close();
-    return $rows > 0;
+    return $num_rows > 0;
+  }
+
+  /**
+  * Check existing district
+  * @param $districtName
+  **/
+  public function isDistrictExists($districtName) {
+    $query = "SELECT district_name FROM service_districts WHERE district_name = ?";
+
+    $stmt = $this->conn->prepare($query);
+    $stmt->bind_param('s', $districtName);
+    $stmt->execute();
+    $stmt->store_result();
+    $num_rows = $stmt->num_rows;
+    $stmt->close();
+    return $num_rows > 0;
   }
 
   /**
