@@ -51,7 +51,7 @@ $app->post('/adddistrict', function() use($app){
   $districtName = strtolower($districtName); // post everything in lowecase
 
   $db = new dbHandler();
-  $result = $db->postNewServiceType($districtName);
+  $result = $db->postNewDistrict($districtName);
 
   if($result == SERVICE_DISTRICT_ADDED_SUCCESSFULLY) {
 		$res["error"] = false;
