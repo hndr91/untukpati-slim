@@ -3,6 +3,9 @@
 class dbHandler {
   private $conn;
 
+  /**
+  * constructor
+  **/
   function __construct() {
     require_once dirname(__FILE__) . '/dbConnect.php';
     //Open DB connection
@@ -11,10 +14,14 @@ class dbHandler {
   }
 
   /**
+  =============GET==============
+  **/
+
+  /**
   * Get Service Type Name
   **/
   public function getServiceType() {
-    $query = "SELECT type_name FROM service_type ORDER BY type_name ASC";
+    $query = "SELECT type_name FROM service_type WHERE flag = 0 ORDER BY type_name ASC";
     $stmt = $this->conn->prepare($query);
     $stmt->execute();
     $serviceType = $stmt->get_result();
@@ -26,7 +33,7 @@ class dbHandler {
   * Get Disctrict Name
   **/
   public function getDistricts() {
-    $query = "SELECT district_name FROM service_districts ORDER BY district_name ASC";
+    $query = "SELECT district_name FROM service_districts WHERE flag = 0 ORDER BY district_name ASC";
     $stmt = $this->conn->prepare($query);
     $stmt->execute();
     $districtName = $stmt->get_result();
@@ -41,6 +48,7 @@ class dbHandler {
     $query = "SELECT service_name, service_address, service_telp, service_email, service_type,
               service_district, service_info, service_img_url, service_location_name, service_location_long, service_location_lat
               FROM service_list
+              WHERE flag = 0
               GROUP BY service_type
               ORDER BY service_name ASC";
     $stmt = $this->conn->prepare($query);
@@ -109,6 +117,10 @@ class dbHandler {
     $stmt->close();
     return $services;
   }
+
+  /**
+  =================POST===================
+  **/
 
   /**
   * Insert new service type
@@ -198,6 +210,176 @@ class dbHandler {
     return $res;
   }
 
+  /**
+  ================PUT=================
+  **/
+
+  /**
+  * Update Service Type
+  * @param $oldTypeName, $newTypeName
+  **/
+  public function updateType($oldTypeName, $newTypeName) {
+    $res = array();
+
+    if($this->isTypeExists($oldTypeName)){
+      $query = "UPDATE service_type SET type_name = ? WHERE type_name = ?";
+      $stmt = $this->conn->prepare($query);
+      $stmt->bind_param('ss', $newTypeName, $oldTypeName);
+      $result = $stmt->execute();
+      $stmt->close();
+
+      if($result){
+        return SERVICE_TYPE_UPDATED;
+      } else {
+        return SERVICE_TYPE_UPDATE_FAILED;
+      }
+    } else {
+      return SERVICE_TYPE_NOT_EXIST;
+    }
+    return $res;
+  }
+
+  /**
+  * Update Service district
+  * @param $oldDistrictName, $newDistrictName
+  **/
+  public function updateDistrict($oldDistrictName, $newDistrictName) {
+    $res = array();
+
+    if($this->isDistrictExists($oldDistrictName)){
+      $query = "UPDATE service_districts SET district_name = ? WHERE district_name = ?";
+      $stmt = $this->conn->prepare($query);
+      $stmt->bind_param('ss', $newDistrictName, $oldDistrictName);
+      $result = $stmt->execute();
+      $stmt->close();
+
+      if($result) {
+        return SERVICE_DISTRICT_UPDATED;
+      } else {
+        return SERVICE_DISTRICT_UPDATE_FAILED;
+      }
+    } else {
+      return SERVICE_DISTRICT_NOT_EXIST;
+    }
+    return $res;
+  }
+
+  /**
+  * Update Service
+  * @param $oldServiceName
+  * @param $newServiceName, $newServiceAddress, $newServiceTelp, $newSeviceEmail,
+  * @param $newServiceType, $newServiceDistrict, $newServiceInfo, $newServiceImgUrl, $newServiceLocationName,
+  * @param $newServiceLocationLong, $newServiceLocationLat
+  **/
+  public function updateService($oldServiceName, $newServiceName, $newServiceAddress, $newServiceTelp, $newServiceEmail,
+  $newServiceType, $newServiceDistrict, $newServiceInfo, $newServiceImgUrl, $newServiceLocationName,
+  $newServiceLocationLong, $newServiceLocationLat) {
+    $res = array();
+
+    if($this->isServiceExists($serviceName)) {
+      $query = "UPDATE service_list
+                SET service_name = ?
+                service_address = ?
+                service_telp = ?
+                service_email = ?
+                service_type = ?
+                service_district = ?
+                service_info = ?
+                service_img_url = ?
+                service_location_name = ?
+                service_location_long = ?
+                service_location_lat = ?
+                WHERE service_name = ?";
+
+      $stmt = $this->conn->prepare($query);
+      $stmt->bind_param('ssssssssssss',$newServiceName, $newServiceAddress, $newServiceTelp, $newServiceEmail,
+      $newServiceType, $newServiceDistrict, $newServiceInfo, $newServiceImgUrl, $newServiceLocationName,
+      $newServiceLocationLong, $newServiceLocationLat, $oldServiceName);
+
+      $result = $stmt->execute();
+      $stmt->close();
+
+      if($result) {
+        return SERVICE_UPDATED;
+      } else {
+        return SERVICE_UPDATE_FAILED;
+      }
+    } else {
+      return SERVICE_NOT_EXIST;
+    }
+    return $res;
+  }
+
+  /**
+  ============DELETE==============
+  * SOFT DELETE
+  **/
+
+  public function deleteType($typeName) {
+    $res = array();
+
+    if($this->isTypeExists($typeName)){
+      $query = "UPDATE service_type SET flag = 1 WHERE type_name = ?";
+      $stmt = $this->conn->prepare($query);
+      $stmt->bind_param('s', $typeName);
+      $result = $stmt->execute();
+      $stmt->close();
+
+      if($result){
+        return SERVICE_TYPE_DELETED;
+      } else {
+        return SERVICE_TYPE_DELETE_FAILED;
+      }
+    } else {
+      return SERVICE_TYPE_NOT_EXIST;
+    }
+    return $res;
+  }
+
+  public function deleteDistrict($districtName) {
+    $res = array();
+
+    if($this->isDistrictExists($districtName)){
+      $query = "UPDATE service_districts SET flag = 1 WHERE district_name = ?";
+      $stmt = $this->conn->prepare($query);
+      $stmt->bind_param('s', $districtName);
+      $result = $stmt->execute();
+      $stmt->close();
+
+      if($result) {
+        return SERVICE_DISTRICT_DELETED;
+      } else {
+        return SERVICE_DISTRICT_DELETE_FAILED;
+      }
+    } else {
+      return SERVICE_DISTRICT_NOT_EXIST;
+    }
+    return $res;
+  }
+
+  public function deleteService($serviceName) {
+    $res = array();
+
+    if($this->isServiceExists($serviceName)) {
+      $query = "UPDATE service_list SET flag = 1 WHERE service_name = ?";
+
+      $stmt = $this->conn->prepare($query);
+      $stmt->bind_param('s', $serviceName);
+      $result = $stmt->execute();
+      $stmt->close();
+
+      if($result) {
+        return SERVICE_DELETED;
+      } else {
+        return SERVICE_DELETE_FAILED;
+      }
+    } else {
+      return SERVICE_NOT_EXIST;
+    }
+    return $res;
+  }
+
+
 
   /**
   ============== HELPER METHOD =====================
@@ -208,7 +390,7 @@ class dbHandler {
   * @param $typeName
   **/
   public function isTypeExists($typeName) {
-    $query = "SELECT type_name FROM service_type WHERE type_name = ?";
+    $query = "SELECT type_name FROM service_type WHERE type_name = ? AND flag = 0";
 
     $stmt = $this->conn->prepare($query);
     $stmt->bind_param('s',$typeName);
@@ -224,7 +406,7 @@ class dbHandler {
   * @param $districtName
   **/
   public function isDistrictExists($districtName) {
-    $query = "SELECT district_name FROM service_districts WHERE district_name = ?";
+    $query = "SELECT district_name FROM service_districts WHERE district_name = ? AND flag = 0";
 
     $stmt = $this->conn->prepare($query);
     $stmt->bind_param('s', $districtName);
@@ -240,7 +422,7 @@ class dbHandler {
   * @param $serviceName
   **/
   public function isServiceExists($serviceName) {
-    $query = "SELECT id_service, service_name FROM service_list WHERE service_name = ?";
+    $query = "SELECT service_name FROM service_list WHERE service_name = ? AND flag = 0";
 
     $stmt = $this->conn->prepare($query);
     $stmt->bind_param('s', $serviceName);

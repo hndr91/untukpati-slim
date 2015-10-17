@@ -119,7 +119,203 @@ $app->post('/addservice', function() use($app){
 
 });
 
+/**
+===============PUT METHOD REGION=================
+**/
 
+/**
+* Update service type name
+* @param $oldTypeName
+**/
+$app->put('/updatetype', function() use($app){
+  $res = array();
+
+  $oldTypeName = $app->request()->put('oldTypeName');
+  $newTypeName = $app->request()->put('newTypeName');
+  $oldTypeName = strtolower($oldTypeName);
+  $newTypeName = strtolower($newTypeName);
+
+  $db = new dbHandler();
+  $result = $db->updateType($oldTypeName, $newTypeName);
+
+  if($result == SERVICE_TYPE_UPDATED) {
+    $res["error"] = false;
+		$res["message"] = "Service type updated";
+    response(201, $res);
+  } else if ($result == SERVICE_TYPE_UPDATE_FAILED) {
+    $res["error"] = true;
+    $res["message"] = "Service type update failed";
+    response(200, $res);
+  } else if ($result == SERVICE_TYPE_NOT_EXIST) {
+    $res["error"] = true;
+    $res["error"] = "Service type not exist";
+    response(200, $res);
+  }
+});
+
+/**
+* Update disctict name
+* @param $oldDistrictName
+**/
+$app->put('/updatedistrict', function() use($app){
+  $res = array();
+
+  $oldDistrictName = $app->request()->put('oldDistrictName');
+  $newDistrictName = $app->request()->put('newDistrictName');
+  $oldDistrictName = strtolower($oldDistrictName);
+  $newDistrictName = strtolower($newDistrictName);
+
+  $db = new dbHandler();
+  $result = $db->updateDistrict($oldDistrictName, $newDistrictName);
+
+  if($result == SERVICE_DISTRICT_UPDATED) {
+    $res["error"] = false;
+    $res["message"] = "Service district updated";
+    response(201, $res);
+  } else if ($result == SERVICE_DISTRICT_UPDATE_FAILED) {
+    $res["error"] = true;
+    $res["message"] = "Service district update failed";
+    response(200, $res);
+  } else if($result == SERVICE_DISTRICT_NOT_EXIST) {
+    $res["error"] = true;
+    $res["message"] = "Service district not exist";
+    response(200, $res);
+  }
+});
+
+/**
+* Update service list
+* @param $oldServiceName
+**/
+$app->put('/updateservice/:servicename', function($oldServiceName) use($app){
+  $res = array();
+
+  $newServiceName = $app->request()->put('serviceName');
+  $newServiceAddress = $app->request()->put('serviceAddress');
+  $newServiceTelp = $app->request()->put('serviceTelp');
+  $newServiceEmail = $app->request()->put('serviceEmail');
+  $newServiceType = $app->request()->put('serviceType');
+  $newServiceDistrict = $app->request()->put('serviceDistrict');
+  $newServiceInfo = $app->request()->put('serviceInfo');
+  $newServiceImgUrl = $app->request()->put('serviceImgUrl');
+  $newServiceLocationName = $app->request()->put('serviceLocationName');
+  $newServiceLocationLong = $app->request()->put('serviceLocationLong');
+  $newServiceLocationLat = $app->request()->put('serviceLocationLat');
+
+  $oldServiceName = strtolower($oldServiceName);
+  $newServiceName = strtolower($newServiceName);
+  $newServiceAddress = strtolower($newServiceAddress);
+  $newServiceTelp = strtolower($newServiceTelp);
+  $newServiceEmail = strtolower($newServiceEmail);
+  $newServiceInfo = strtolower($newServiceInfo);
+  $newServiceImgUrl = strtolower($newServiceImgUrl);
+  $newServiceLocationName = strtolower($newServiceLocationName);
+
+  $db = new dbHandler();
+  $result = $db->updateService($oldServiceName,
+                  $newServiceName,
+                  $newServiceAddress,
+                  $newServiceType,
+                  $newServiceEmail,
+                  $newServiceType,
+                  $newServiceDistrict,
+                  $newServiceInfo,
+                  $newServiceImgUrl,
+                  $newServiceLocationName,
+                  $newServiceLocationLong,
+                  $newServiceLocationLat);
+
+  if($result == SERVICE_UPDATED) {
+    $res["error"] = false;
+    $res["message"] = "Service updated";
+    response(201, $res);
+  } else if ($result == SERVICE_UPDATE_FAILED) {
+    $res["error"] = true;
+    $res["message"] = "Service update failed";
+    response(200, $res);
+  } else if ($result == SERVICE_NOT_EXIST) {
+    $res["error"] = true;
+    $res["message"] = "Service not exist";
+    response(200, $res);
+  }
+});
+
+
+/**
+=============DELETE METHOD REGION===============
+**/
+
+$app->put('/deletetype', function() use($app){
+  $res = array();
+
+  $typeName = $app->request()->put('typeName');
+  $typeName = strtolower($typeName);
+
+  $db = new dbHandler();
+  $result = $db->deleteType($typeName);
+
+  if($result == SERVICE_TYPE_DELETED) {
+    $res["error"] = false;
+    $res["message"] = "Service type deleted";
+    response(201, $res);
+  } else if ($result == SERVICE_TYPE_DELETE_FAILED) {
+    $res["error"] = true;
+    $res["message"] = "Service delete failed";
+    response(200, $res);
+  } else if ($result == SERVICE_TYPE_NOT_EXIST) {
+    $res["error"] = true;
+    $res["message"] = "Service type not exist";
+    response(200, $res);
+  }
+});
+
+$app->put('/deletedistrict', function() use($app){
+  $res = array();
+
+  $disctrictName = $app->request()->put('districtName');
+  $disctrictName = strtolower($disctrictName);
+
+  $db = new dbHandler();
+  $result = $db->deleteDistrict($disctrictName);
+
+  if($result == SERVICE_DISTRICT_DELETED) {
+    $res["error"] = false;
+    $res["message"] = "Service disctrict deleted";
+    response(201, $res);
+  } else if ($result == SERVICE_DISTRICT_DELETE_FAILED) {
+    $res["error"] = true;
+    $res["message"] = "Service district delete failed";
+    response(200, $res);
+  } else if ($result == SERVICE_DISTRICT_NOT_EXIST) {
+    $res["error"] = true;
+    $res["message"] = "Service district not exist";
+    response(200, $res);
+  }
+});
+
+$app->put('/deleteservice', function($serviceName) use($app){
+  $res = array();
+
+  $serviceName = $app->request()->put('serviceName');
+  $serviceName = strtolower($serviceName);
+
+  $db = new dbHandler();
+  $result = $db->deleteService($serviceName);
+
+  if($result == SERVICE_DELETED) {
+    $res["error"] = false;
+    $res["message"] = "Service deleted";
+    response(201, $res);
+  } else if ($result == SERVICE_DELETE_FAILED) {
+    $res["error"] = true;
+    $res["message"] = "Service delete failed";
+    response(200, $res);
+  } else if($result == SERVICE_NOT_EXIST) {
+    $res["error"] = true;
+    $res["message"] = "Service not exist";
+    response(200, $res);
+  }
+});
 
 /**
 =========== GET METHOD REGION ===========
@@ -249,6 +445,10 @@ $app->get('/districttypeservices/:district/:type', function($district,$type){
   }
   response(200, $res);
 });
+
+/**
+===============HELPER===================
+**/
 
 /**
 * Print JSON result
