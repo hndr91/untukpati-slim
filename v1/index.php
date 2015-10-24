@@ -82,7 +82,7 @@ $app->post('/services', function() use($app){
   $serviceType = $app->request()->post('serviceType'); //post using type id
   $serviceDistrict = $app->request()->post('serviceDistrict'); //post using district id
   $serviceInfo = $app->request()->post('serviceInfo');
-  $serviceImageUrl = $app->request()->post('serviceImageUrl');
+  $serviceImageUrl = $app->request()->post('serviceImgUrl');
   $serviceLocationName = $app->request()->post('serviceLocationName');
   $serviceLocationLong = $app->request()->post('serviceLocationLong');
   $serviceLocationLat = $app->request()->post('serviceLocationLat');
@@ -102,17 +102,17 @@ $app->post('/services', function() use($app){
 
   if($result == SERVICE_ADDED_SUCCESSFULLY) {
 		$res["error"] = false;
-		$res["message"] = "Service district successfully added";
+		$res["message"] = "Service successfully added";
     response(201, $res);
 	}
 	else if($result == SERVICE_ADD_FAILED) {
 		$res["error"] = true;
-		$res["message"] = "Ooops ! Failed to add service district!";
+		$res["message"] = "Ooops ! Failed to add service!";
     response(200, $res);
 	}
 	else if($result == SERVICE_ALREADY_EXISTED) {
 		$res["error"] = true;
-		$res["message"] = "Service district already existed";
+		$res["message"] = "Service already existed";
     response(200, $res);
 	}
 
