@@ -14,7 +14,7 @@ $app = new Slim\Slim();
 /**
 * Add service type end point
 **/
-$app->post('/addtype', function() use($app){
+$app->post('/type', function() use($app){
   $res = array();
   $typeName = $app->request()->post('typeName');
   $typeName = strtolower($typeName); // post everything in lowecase
@@ -45,7 +45,7 @@ $app->post('/addtype', function() use($app){
 /**
 * Add service district end point
 **/
-$app->post('/adddistrict', function() use($app){
+$app->post('/district', function() use($app){
   $res = array();
   $districtName = $app->request()->post('districtName');
   $districtName = strtolower($districtName); // post everything in lowecase
@@ -73,7 +73,7 @@ $app->post('/adddistrict', function() use($app){
 	}
 });
 
-$app->post('/addservice', function() use($app){
+$app->post('/services', function() use($app){
   $res = array();
   $serviceName = $app->request()->post('serviceName');
   $serviceAddress = $app->request()->post('serviceAddress');
@@ -127,7 +127,7 @@ $app->post('/addservice', function() use($app){
 * Update service type name
 * @param $oldTypeName
 **/
-$app->put('/updatetype', function() use($app){
+$app->put('/type', function() use($app){
   $res = array();
 
   $oldTypeName = $app->request()->put('oldTypeName');
@@ -157,7 +157,7 @@ $app->put('/updatetype', function() use($app){
 * Update disctict name
 * @param $oldDistrictName
 **/
-$app->put('/updatedistrict', function() use($app){
+$app->put('/district', function() use($app){
   $res = array();
 
   $oldDistrictName = $app->request()->put('oldDistrictName');
@@ -187,7 +187,7 @@ $app->put('/updatedistrict', function() use($app){
 * Update service list
 * @param $oldServiceName
 **/
-$app->put('/updateservice/:servicename', function($oldServiceName) use($app){
+$app->put('/services/:servicename', function($oldServiceName) use($app){
   $res = array();
 
   $newServiceName = $app->request()->put('serviceName');
@@ -384,7 +384,7 @@ $app->get('/services', function(){
 * Get service list based on service type
 * @param $type
 **/
-$app->get('/servicestype/:type', function($type){
+$app->get('/services/type/:type', function($type){
   $res = array();
   $db = new dbHandler();
 
@@ -406,7 +406,7 @@ $app->get('/servicestype/:type', function($type){
 * Get service list based on district
 * @param $district
 **/
-$app->get('/districtservices/:district', function($district){
+$app->get('/services/district/:district', function($district){
   $res = array();
   $db = new dbHandler();
 
@@ -428,7 +428,7 @@ $app->get('/districtservices/:district', function($district){
 * Get service list based on district and type
 * @param $district $type
 **/
-$app->get('/districttypeservices/:district/:type', function($district,$type){
+$app->get('/services/target/:district/:type', function($district,$type){
   $res = array();
   $db = new dbHandler();
 
