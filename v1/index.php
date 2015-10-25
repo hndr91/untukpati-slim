@@ -374,7 +374,13 @@ $app->get('/services', function(){
     $tmp["service_address"] = $services["service_address"];
     $tmp["service_telp"] = $services["service_telp"];
     $tmp["service_email"] = $services["service_email"];
+    $tmp["service_type"] = $services["service_type"];
+    $tmp["service_district"] = $services["service_district"];
     $tmp["service_info"] = $services["service_info"];
+    $tmp["service_img_url"] = $services["service_img_url"];
+    $tmp["service_location_name"] = $services["service_location_name"];
+    $tmp["service_location_long"] = $services["service_location_long"];
+    $tmp["service_location_lat"] = $services["service_location_lat"];
     array_push($res,$tmp);
   }
   response(200, $res);
@@ -396,7 +402,13 @@ $app->get('/services/type/:type', function($type){
     $tmp["service_address"] = $services["service_address"];
     $tmp["service_telp"] = $services["service_telp"];
     $tmp["service_email"] = $services["service_email"];
+    $tmp["service_type"] = $services["service_type"];
+    $tmp["service_district"] = $services["service_district"];
     $tmp["service_info"] = $services["service_info"];
+    $tmp["service_img_url"] = $services["service_img_url"];
+    $tmp["service_location_name"] = $services["service_location_name"];
+    $tmp["service_location_long"] = $services["service_location_long"];
+    $tmp["service_location_lat"] = $services["service_location_lat"];
     array_push($res,$tmp);
   }
   response(200, $res);
@@ -418,7 +430,13 @@ $app->get('/services/district/:district', function($district){
     $tmp["service_address"] = $services["service_address"];
     $tmp["service_telp"] = $services["service_telp"];
     $tmp["service_email"] = $services["service_email"];
+    $tmp["service_type"] = $services["service_type"];
+    $tmp["service_district"] = $services["service_district"];
     $tmp["service_info"] = $services["service_info"];
+    $tmp["service_img_url"] = $services["service_img_url"];
+    $tmp["service_location_name"] = $services["service_location_name"];
+    $tmp["service_location_long"] = $services["service_location_long"];
+    $tmp["service_location_lat"] = $services["service_location_lat"];
     array_push($res,$tmp);
   }
   response(200, $res);
@@ -440,7 +458,13 @@ $app->get('/services/target/:district/:type', function($district,$type){
     $tmp["service_address"] = $services["service_address"];
     $tmp["service_telp"] = $services["service_telp"];
     $tmp["service_email"] = $services["service_email"];
+    $tmp["service_type"] = $services["service_type"];
+    $tmp["service_district"] = $services["service_district"];
     $tmp["service_info"] = $services["service_info"];
+    $tmp["service_img_url"] = $services["service_img_url"];
+    $tmp["service_location_name"] = $services["service_location_name"];
+    $tmp["service_location_long"] = $services["service_location_long"];
+    $tmp["service_location_lat"] = $services["service_location_lat"];
     array_push($res,$tmp);
   }
   response(200, $res);
