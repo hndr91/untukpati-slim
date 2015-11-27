@@ -179,7 +179,7 @@ class dbHandler {
   * @param $id, $serviceName, $serviceAddress, $serviceTelp, $serviceEmail, $serviceType, $serviceDistrict,
   * @param $serviceInfo, $serviceImgUrl, $serviceLocationName, $serviceLocationLong, $serviceLocationLat
   **/
-  public function postNewServiceList($serviceName, $serviceAddress, $serviceTelp, $seviceEmail, $serviceType, $serviceDistrict,
+  public function postNewServiceList($serviceName, $serviceAddress, $serviceTelp, $serviceEmail, $serviceType, $serviceDistrict,
   $serviceInfo, $serviceImgUrl, $serviceLocationName, $serviceLocationLong, $serviceLocationLat) {
     $res = array();
 
@@ -191,7 +191,7 @@ class dbHandler {
                 VALUES (?,?,?,?,?,?,?,?,?,?,?,?)";
 
       $stmt = $this->conn->prepare($query);
-      $stmt->bind_param('ssssssssssss',$id,$serviceName,$serviceAddress,$serviceTelp,$serviceEmail,$serviceType,$serviceDistrict,
+      $stmt->bind_param('ssssssssssss', $id,$serviceName,$serviceAddress,$serviceTelp,$serviceEmail,$serviceType,$serviceDistrict,
       $serviceInfo,$serviceImgUrl,$serviceLocationName,$serviceLocationLong,$serviceLocationLat);
 
       $result = $stmt->execute();

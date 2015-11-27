@@ -91,9 +91,10 @@ $app->post('/services', function() use($app){
   $serviceName = strtolower($serviceName);
   $serviceAddress = strtolower($serviceAddress);
   $serviceTelp = strtolower($serviceTelp);
+  $serviceEmail = strtolower((string)$serviceEmail);
   $serviceEmail = strtolower($serviceEmail);
   $serviceInfo = strtolower($serviceInfo);
-  $serviceImageUrl = strtolower($serviceImageUrl);
+  $serviceImageUrl = strtolower((string)$serviceImageUrl);
   $serviceLocationName = strtolower($serviceLocationName);
 
   $db = new dbHandler();
