@@ -45,12 +45,14 @@ class dbHandler {
   * Get All Services
   **/
   public function getAllServices() {
-    $query = "SELECT service_name, service_address, service_telp, service_email, service_type,
-              service_district, service_info, service_img_url, service_location_name, service_location_long, service_location_lat
-              FROM service_list
-              WHERE flag = 0
-              GROUP BY service_type
-              ORDER BY service_name ASC";
+    $query = "SELECT s.service_name, s.service_address, s.service_telp, s.service_email,s.service_info, s.service_img_url,
+              s.service_location_name, s.service_location_long, s.service_location_lat,
+              t.type_name as service_type , d.district_name as service_district
+              FROM service_list as s
+              INNER JOIN service_type as t ON s.service_type=t.id_type
+              INNER JOIN service_districts as d ON s.service_district=d.id_district
+              WHERE s.flag = 0
+              ORDER BY s.service_district ASC, s.service_type ASC, s.service_name ASC";
     $stmt = $this->conn->prepare($query);
     $stmt->execute();
     $districtName = $stmt->get_result();
@@ -63,12 +65,14 @@ class dbHandler {
   * @param $type
   **/
   public function getSpecificServices($type) {
-    $query = "SELECT service_name, service_address, service_telp, service_email, service_district, service_info, service_img_url,
-              service_location_name, service_location_long, service_location_lat
-              FROM service_list
-              WHERE service_type = ?
-              GROUP BY service_type
-              ORDER BY service_name";
+    $query = "SELECT s.service_name, s.service_address, s.service_telp, s.service_email,s.service_info, s.service_img_url,
+              s.service_location_name, s.service_location_long, s.service_location_lat,
+              t.type_name as service_type , d.district_name as service_district
+              FROM service_list as s
+              INNER JOIN service_type as t ON s.service_type=t.id_type
+              INNER JOIN service_districts as d ON s.service_district=d.id_district
+              WHERE s.flag = 0 AND s.service_type = ?
+              ORDER BY s.service_district ASC, s.service_name ASC";
 
     $stmt = $this->conn->prepare($query);
     $stmt->bind_param("s",$type);
@@ -83,12 +87,14 @@ class dbHandler {
   * @param $district
   **/
   public function getDistrictAllServices($district) {
-    $query = "SELECT service_name, service_address, service_telp, service_email, service_type, service_info, service_img_url,
-              service_location_name, service_location_long, service_location_lat
-              FROM service_list
-              WHERE service_district = ?
-              GROUP BY service_type
-              ORDER BY service_name";
+    $query = "SELECT s.service_name, s.service_address, s.service_telp, s.service_email,s.service_info, s.service_img_url,
+              s.service_location_name, s.service_location_long, s.service_location_lat,
+              t.type_name as service_type , d.district_name as service_district
+              FROM service_list as s
+              INNER JOIN service_type as t ON s.service_type=t.id_type
+              INNER JOIN service_districts as d ON s.service_district=d.id_district
+              WHERE s.flag = 0 AND s.service_district = ?
+              ORDER BY s.service_type ASC, s.service_name ASC";
 
     $stmt = $this->conn->prepare($query);
     $stmt->bind_param("s",$district);
@@ -103,12 +109,14 @@ class dbHandler {
   * @param $distrct $type
   **/
   public function getDistrictServiceType($district, $type) {
-    $query = "SELECT service_name, service_address, service_telp, service_email, service_info, service_img_url,
-              service_location_name, service_location_long, service_location_lat
-              FROM service_list
-              WHERE service_district = ? AND service_type = ?
-              GROUP BY service_type
-              ORDER BY service_name";
+    $query = "SELECT s.service_name, s.service_address, s.service_telp, s.service_email,s.service_info, s.service_img_url,
+              s.service_location_name, s.service_location_long, s.service_location_lat,
+              t.type_name as service_type , d.district_name as service_district
+              FROM service_list as s
+              INNER JOIN service_type as t ON s.service_type=t.id_type
+              INNER JOIN service_districts as d ON s.service_district=d.id_district
+              WHERE s.flag = 0 AND s.service_district = ? AND s.service_type = ?
+              ORDER BY s.service_name ASC";
 
     $stmt = $this->conn->prepare($query);
     $stmt->bind_param("ss",$district,$type);

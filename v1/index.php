@@ -486,7 +486,7 @@ function response($status_code, $response) {
     // setting response content type to json
     $app->contentType('application/json');
     // print as JSON
-    echo json_encode($response);
+    echo json_encode($response, JSON_PRETTY_PRINT);
 }
 
 $app->run();
